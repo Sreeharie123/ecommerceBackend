@@ -51,10 +51,12 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //Get AllUsers
-router.get("/",verifyTokenAndAdmin, async (req, res) => {
-  const query=req.query.new
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
+  const query = req.query.new;
   try {
-    const users = query ? await User.find().sort({_id:-1}).limit(1) :await User.find()
+    const users = query
+      ? await User.find().sort({ _id: -1 }).limit(1)
+      : await User.find();
 
     res.status(200).json(users);
   } catch (error) {
@@ -62,24 +64,20 @@ router.get("/",verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-
 //Get UserStatus
-router.get('/status',verifyTokenAndAdmin,async(req,res)=>{
-  const date=new Date()
-  const lastYear= new Date(date.setFullYear(date.getFullYear()-1))
+router.get("/status", verifyTokenAndAdmin, async (req, res) => {
+  const date = new Date();
+  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
   try {
-
-     const data=await User.aggregate([
-      {$match: {createdAt:{$gte:lastYear}}},
-      {$project: {month:{$month:"$createdAt"}}},
-      {$group:{_id:"$month",total:{$sum:1}}}
-     ])
-     res.status(200).send(data)
-    
+    const data = await User.aggregate([
+      { $match: { createdAt: { $gte: lastYear } } },
+      { $project: { month: { $month: "$createdAt" } } },
+      { $group: { _id: "$month", total: { $sum: 1 } } },
+    ]);
+    res.status(200).send(data);
   } catch (error) {
-    res.status(500).json(error)
-    
-  } 
-})
+    res.status(500).json(error);
+  }
+});
 
-module.exports = router; 
+module.exports = router;

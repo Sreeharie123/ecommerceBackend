@@ -47,7 +47,7 @@ router.get('/',async(req,res)=>{
     try {
       let products;
       if(qNew){
-         products=await productModel.find().sort({createdAt:-1}).limit(qNew)
+         products=await productModel.find().sort({createdAt:-1}).limit(1)
       }else if(qCategory){
          products= await productModel.find({categories:{
             $in:[qCategory]

@@ -40,4 +40,28 @@ router.delete('/:id',verifyTokenAndAdmin,async (req,res)=>{
     }
 })
 
+//Get product
+router.get('/all',async(req,res)=>{
+ 
+    try {
+        const allProduct=await productModel.find()
+        res.status(200).json(allProduct)
+
+    } catch (error) {
+        res.status(500).json(error)
+    }
+
+})
+
+//Get single product
+router.get('/single/:id',async (req,res)=>{
+    try {
+        const singleProduct=await productModel.findById(req.params.id)
+        res.status(200).json(singleProduct)
+        
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
 module.exports = router;
